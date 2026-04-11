@@ -38,9 +38,10 @@ class CommandLanguageModel:
             self.is_ready = False
             raise
             
-
-    def encode_command(self, texts: list[str]):
+    
+    def encode_command(self, command: str):
         if not self.is_ready:
             raise RuntimeError("Model is not loaded. Call start_up first.")
-        return self.model.encode(texts)
+         
+        return self.model.encode(command)
         
