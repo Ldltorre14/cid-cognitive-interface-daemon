@@ -6,9 +6,9 @@ from torch import nn
 
 
 class PPOAgent:
-    def __init__(self):
-        self.actor_network = ActorNetwork(in_embed_dim=768, out_embed_dim=3)
-        self.critic_network = CriticNetwork(in_embed_dim=768)
+    def __init__(self, in_embed_dim: int, out_embed_di: int):
+        self.actor_network = ActorNetwork(in_embed_dim=in_embed_dim, out_embed_dim=out_embed_di)
+        self.critic_network = CriticNetwork(in_embed_dim=in_embed_dim)
         self.memory = Memory(batch_size=10)
 
     def select_action(self, state_embedding):
