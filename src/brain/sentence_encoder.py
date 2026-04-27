@@ -6,7 +6,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("sentence_encoder")
 
 
-class CommandLanguageModel:
+class PerceptionModel:
     def __init__(self, 
                  device: str = None, 
                  model_name: str = "all-MiniLM-L6-v2", 
@@ -22,7 +22,7 @@ class CommandLanguageModel:
 
     def start_up(self):
         try:
-            logger.info(f"Loading Command Language Model: {self.model_name}...")
+            logger.info(f"Initializing Command Language Model: {self.model_name}...")
             
             if self.model_name:
                 self.model = SentenceTransformer(
@@ -43,5 +43,6 @@ class CommandLanguageModel:
         if not self.is_ready:
             raise RuntimeError("Model is not loaded. Call start_up first.")
          
-        return self.model.encode(command)
+        return self.model.encode(command,
+                                 convert_to_tensor=True)
         

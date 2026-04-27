@@ -1,10 +1,12 @@
 from pydantic import BaseModel 
+from datetime import datetime
 
-class MemorySchema(BaseModel):
+class InferenceSchema(BaseModel):
+    id: str
     command: str 
     state_embedding: list[float]
-    action_id: str 
+    action_id: int 
     log_prob: float 
-    value_pred: float 
-    reward: float = 0.0 
-    timestamp: float
+    critic_value: float 
+    reward: float
+    timestamp: datetime

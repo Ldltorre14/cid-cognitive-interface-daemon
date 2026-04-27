@@ -3,26 +3,20 @@ from dataclasses import dataclass, field
 import logging 
 import torch
 import numpy as np
+from schemas.memory_schemas import InferenceSchema
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("memory")
 
-@dataclass
-class MemoryBatch:
-    states: list = field(default_factory=list)               # States  (s):                The encoder embeddings (768-dim vectors)
-    actions: list = field(default_factory=list)              # Actions (a):                The IDs of functions/controllers picked by the Actor Network
-    log_probabilities: list = field(default_factory=list)    # log-probabilities (log pi): The log probabilities of the action picked by the Actor Network
-    values: list = field(default_factory=list)               # Values (V):                 The Critic Network prediction of the reward for that state
-    rewards: list = field(default_factory=list)              # Rewards (r):                The actual feedback (+1, -1, etc)
 
-class Memory:
+class BatchMemory:
     def __init__(self, memory_size: int = 100, batch_size: int = 5):
         self.memory_size = memory_size
         self.batch_size = batch_size   # Batch size should be at least bigger than 100 as this batch will then be split into mini batches
         
         self.full = False
-        self.processed_batches = []
-        self.memory_batch = list[MemoryBatch]          
+        self.processed_batches: list[InferenceSchema] = []
+        self.memory_batch: list[InferenceSchema] = []       
     
     def get_buffer_status(self):
         return self.full
@@ -33,24 +27,15 @@ class Memory:
     
     def reset_batch(self):
         logger.info("Memory buffer was reset")
-
-        self.states = []
-        self.actions = []
-        self.log_probabilities = []
-        self.values = []
-        self.rewards = []   
+        self.memory_batch = []
 
         self.full = False 
     
-    def append_memory(self, state, action, log, value, reward):
+    def store_inference(self, inference_record: InferenceSchema):
         logger.info("Appending a memory unit to the memory buffer")
-        self.states.append(state)
-        self.actions.append(action)
-        self.log_probabilities.append(log)
-        self.values.append(value)
-        self.rewards.append(reward)
+        self.memory_batch.append(inference_record)
         
-        if len(self.states) == self.memory_size:
+        if len(self.memory_batch) == self.memory_size:
             self.full = True
     
     def get_generalized_advantage_estimation(self, next_value, gamma_value, lambda_value):
