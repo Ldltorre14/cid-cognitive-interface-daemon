@@ -33,7 +33,7 @@ class CID:
         
         self.agent = PPOAgent(
             in_embed_dim = in_embedding_dim,
-            out_embed_di = out_embedding_dim
+            out_embed_dim = out_embedding_dim
         )
         
         self._start_up()
