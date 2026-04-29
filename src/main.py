@@ -15,6 +15,6 @@ if __name__=="__main__":
 
     while True:
         user_input = input("Input your command: ")
-        result = agent.run(user_input=user_input)
+        result = agent.run_command(user_input=user_input)
 
         print(result)
